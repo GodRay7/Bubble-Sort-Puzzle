@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h> 
 #include <string.h>
+#include <time.h>
 #include "ballsortpuzzle.h"
 
 void string_suffle(char string[])
@@ -16,7 +17,7 @@ void string_suffle(char string[])
 }
 void generator(const int rows, const int columns, char field[rows][columns])
 {
-    //code...
+    
     int emptyCol1 = rand() % columns;
     int emptyCol2 = rand() % columns;
     while (emptyCol1 == emptyCol2) {
@@ -39,7 +40,6 @@ void generator(const int rows, const int columns, char field[rows][columns])
 
     strIndex = 0;
     for (int i = 0; i < columns; i++) {
-
         for (int j = 0; j < rows; j++) {
         if (i == emptyCol1 || i == emptyCol2) {
             field[j][i] = ' ';
@@ -76,9 +76,10 @@ void down_possible(const int rows, const int columns, char field[rows][columns],
         for (int i = rows - 2; i >= 0; i--) {
             if (field[i][y - 1] == ' ' && field[i + 1][y - 1] == tmpX) {
                 field[i][y - 1] = tmpX;
+                field[rememberRowIndex][x - 1] = ' ';
                 break;
-            } else if(field[i][y - 1] == ' ' && field[i + 1][y - 1] == tmpX) {
-                printf("Symbols not equal\n");\
+            } else if(field[i][y - 1] == ' ' && field[i + 1][y - 1] != tmpX) {
+                printf("Symbols not equal\n");
                 break;
             }
         }
@@ -100,33 +101,55 @@ bool check(const int rows, const int columns, char field[rows][columns])
     return true;
 }
 
-// void game_field(const int rows, const int columns, char field[rows][columns]) {
-//     for (int i = 0; i < rows; i++) {
-//         printf("%d ", i + 1);
-//         for (int j = 0; j < columns; j++) {
-//             printf(" %c |", field[i][j]);
-//         }
-//         printf("\n");
-//     }
+void game_field(const int rows, const int columns, char field[rows][columns]) {
+    for (int i = 0; i < rows; i++) {
+        printf("%d ", i + 1);
+        for (int j = 0; j < columns; j++) {
+            printf(" %c |", field[i][j]);
+        }
+        printf("\n");
+    }
  
-//     printf("  ");
-//     for (int j = 0; j < columns; j++) {
-//         printf("--- ");
-//     }
-//     printf("\n");
+    printf("  ");
+    for (int j = 0; j < columns; j++) {
+        printf("--- ");
+    }
+    printf("\n");
  
-//     printf("  ");
-//     for (int j = 0; j < columns; j++) {
-//         printf("%d ", j + 1);
-//     }
-//     printf("\n");
-// }
+    printf("  ");
+    for (int j = 0; j < columns; j++) {
+        printf(" %d  ", j + 1);
+    }
+    printf("\n");
+}
 
 
-// video unesco2 2nd lesson 45:00
+void ball_sort_puzzle()
+{
+    const int rows = 4;
+    const int cols = 6;
+    char field[rows][cols];
+    int x, y;
 
+    srand(time(NULL)); 
 
-// void ball_sort_puzzle()
-// {
+    generator(rows, cols, field); 
 
-// }
+    game_field(rows, cols, field); 
+
+    
+    while (!check(rows, cols, field)) {
+        printf("Enter column to move from (1-%d): ", cols);
+        scanf("%d", &x);
+        printf("Enter column to move to (1-%d): ", cols);
+        scanf("%d", &y);
+
+        
+        down_possible(rows, cols, field, x, y);
+
+        
+        game_field(rows, cols, field);
+    }
+
+    printf("Congratulations! You won!\n");
+}
