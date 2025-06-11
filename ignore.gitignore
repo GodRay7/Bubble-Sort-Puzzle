@@ -1,0 +1,5 @@
+# Ignore all .o files
+*.o
+
+# Ignore a specific file
+ballsortpuzzle
